@@ -82,6 +82,23 @@ header p{font-size:10px;color:rgba(0,255,136,0.4);letter-spacing:3px;margin-top:
   font-size:11px;letter-spacing:2px;cursor:pointer;border-radius:8px;
   transition:all 0.2s;
 }
+
+.nav-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+  background:rgba(0,255,136,0.04);
+  border:1px solid rgba(0,255,136,0.2);
+  border-radius:10px;padding:8px 14px;
+}
+.nav-btn{
+  background:transparent;border:1px solid rgba(0,255,136,0.3);
+  border-radius:6px;color:#00ff88;padding:4px 12px;
+  font-size:14px;cursor:pointer;
+}
+.nav-label{
+  font-family:'Orbitron',sans-serif;font-size:11px;
+  color:#00ff88;letter-spacing:2px;text-align:center;
+}
 .period-btn.active{
   background:rgba(0,255,136,0.15);color:#00ff88;
   box-shadow:0 0 10px rgba(0,255,136,0.2);
@@ -205,6 +222,13 @@ header p{font-size:10px;color:rgba(0,255,136,0.4);letter-spacing:3px;margin-top:
   <button class="period-btn" data-period="month">OY</button>
 </div>
 
+<!-- Navigation -->
+<div class="nav-bar" id="navBar">
+  <button class="nav-btn" id="navPrev">◀</button>
+  <span class="nav-label" id="navLabel">Bugun</span>
+  <button class="nav-btn" id="navNext">▶</button>
+</div>
+
 <!-- Chart -->
 <div class="chart-wrap">
   <div class="chart-title">[ GRAFIK ]</div>
@@ -275,6 +299,8 @@ var OUT_CATS = ['Taksi','Ovqat','Dori','Ijara (Tebo)','Ijara (uy)','Transport','
 var txs = [];
 var currentPeriod = 'day';
 var addType = 'in';
+// These will be initialized after functions are defined
+var selectedDate, selectedWeek, selectedMonth;
 
 onValue(ref(db, 'daromad'), function(snapshot){
   txs = [];
@@ -298,27 +324,36 @@ function fmt(n){
 function fmtFull(n){ return Number(n).toLocaleString('ru-RU')+" so'm"; }
 
 function fmtDate(d){
-  var dt = new Date(d);
+  var parts = d.split('-');
   var m = ['Yan','Feb','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
-  return dt.getDate()+' '+m[dt.getMonth()];
+  return parseInt(parts[2])+' '+m[parseInt(parts[1])-1];
 }
 
 function todayStr(){
   var d = new Date();
-  return d.getFullYear()+'-'+(d.getMonth()+1<10?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();
+  var y = d.getFullYear();
+  var mo = d.getMonth()+1; if(mo<10) mo='0'+mo;
+  var day = d.getDate(); if(day<10) day='0'+day;
+  return y+'-'+mo+'-'+day;
 }
 
 function filterTxs(period){
   var now = new Date();
+  var today = todayStr();
   return txs.filter(function(t){
-    var d = new Date(t.date);
+    if(!t.date) return false;
     if(period==='day'){
-      return t.date === todayStr();
+      return t.date === today;
     } else if(period==='week'){
-      var diff = (now - d) / 86400000;
+      // last 7 days string comparison safe
+      var parts = t.date.split('-');
+      var txDate = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+      var nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      var diff = (nowDate - txDate) / 86400000;
       return diff >= 0 && diff < 7;
     } else {
-      return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+      var parts = t.date.split('-');
+      return parseInt(parts[1])-1 === now.getMonth() && parseInt(parts[0]) === now.getFullYear();
     }
   });
 }
@@ -364,24 +399,29 @@ function updateChart(){
   } else if(currentPeriod==='week'){
     for(var i=6;i>=0;i--){
       var d = new Date(now); d.setDate(d.getDate()-i);
-      var ds = d.getFullYear()+'-'+(d.getMonth()+1<10?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();
+      var dy = d.getFullYear(); var dmo = d.getMonth()+1; var dd = d.getDate();
+      var ds = dy+'-'+(dmo<10?'0':'')+dmo+'-'+(dd<10?'0':'')+dd;
       var inAmt=0,outAmt=0;
       txs.forEach(function(t){ if(t.date===ds){ if(t.type==='in') inAmt+=Number(t.amount); else outAmt+=Number(t.amount); }});
       var nm=['Yak','Du','Se','Cho','Pa','Ju','Sha'];
       days.push({label:nm[d.getDay()], in:inAmt, out:outAmt});
     }
   } else {
-    for(var i=0;i<6;i++){
-      var d2 = new Date(now.getFullYear(), now.getMonth()-5+i, 1);
-      var inAmt=0,outAmt=0;
-      txs.forEach(function(t){
-        var td=new Date(t.date);
-        if(td.getMonth()===d2.getMonth()&&td.getFullYear()===d2.getFullYear()){
-          if(t.type==='in') inAmt+=Number(t.amount); else outAmt+=Number(t.amount);
-        }
-      });
-      var mn=['Yan','Feb','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
-      days.push({label:mn[d2.getMonth()], in:inAmt, out:outAmt});
+    // Show days of selected month
+    var mparts = selectedMonth.split('-');
+    var my = parseInt(mparts[0]); var mm2 = parseInt(mparts[1]);
+    var daysInMonth = new Date(my, mm2, 0).getDate();
+    var weeks = [0,0,0,0]; var weeksOut = [0,0,0,0];
+    txs.forEach(function(t){
+      if(t.date && t.date.substring(0,7)===selectedMonth){
+        var day = parseInt(t.date.split('-')[2]);
+        var wi = Math.min(Math.floor((day-1)/7), 3);
+        if(t.type==='in') weeks[wi]+=Number(t.amount);
+        else weeksOut[wi]+=Number(t.amount);
+      }
+    });
+    for(var i=0;i<4;i++){
+      days.push({label:(i+1)+'.hafta', in:weeks[i], out:weeksOut[i]});
     }
   }
 
@@ -451,6 +491,7 @@ function render(){
   updateSummary();
   updateChart();
   updateTxList();
+  updateNavLabel();
 }
 
 // Period buttons
@@ -460,6 +501,10 @@ document.querySelector('.period-bar').addEventListener('click', function(e){
   document.querySelectorAll('.period-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   currentPeriod = btn.getAttribute('data-period');
+  // Reset to current period
+  selectedDate = todayStr();
+  selectedWeek = getWeekStart(new Date());
+  selectedMonth = getMonthPrefix(new Date());
   render();
 });
 
@@ -541,6 +586,63 @@ function showToast(msg){
   t.textContent=msg; t.className='toast show';
   setTimeout(function(){ t.className='toast'; },2000);
 }
+
+
+// Nav label update
+function updateNavLabel(){
+  var label = document.getElementById('navLabel');
+  if(!label) return;
+  var months = ['Yan','Feb','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
+  if(currentPeriod==='day'){
+    var today = todayStr();
+    if(selectedDate===today){
+      label.textContent = 'BUGUN';
+    } else {
+      var p = selectedDate.split('-');
+      label.textContent = parseInt(p[2])+' '+months[parseInt(p[1])-1];
+    }
+  } else if(currentPeriod==='week'){
+    var wend = getWeekEnd(selectedWeek);
+    var p1 = selectedWeek.split('-');
+    var p2 = wend.split('-');
+    label.textContent = parseInt(p1[2])+' '+months[parseInt(p1[1])-1]+' — '+parseInt(p2[2])+' '+months[parseInt(p2[1])-1];
+  } else {
+    var p = selectedMonth.split('-');
+    label.textContent = months[parseInt(p[1])-1]+' '+p[0];
+  }
+}
+
+// Nav prev/next
+document.getElementById('navPrev').addEventListener('click', function(){
+  if(currentPeriod==='day'){
+    var d = new Date(selectedDate); d.setDate(d.getDate()-1);
+    selectedDate = dateToStr(d);
+  } else if(currentPeriod==='week'){
+    var d = new Date(selectedWeek); d.setDate(d.getDate()-7);
+    selectedWeek = dateToStr(d);
+  } else {
+    selectedMonth = addMonths(selectedMonth, -1);
+  }
+  render();
+});
+
+document.getElementById('navNext').addEventListener('click', function(){
+  if(currentPeriod==='day'){
+    var d = new Date(selectedDate); d.setDate(d.getDate()+1);
+    selectedDate = dateToStr(d);
+  } else if(currentPeriod==='week'){
+    var d = new Date(selectedWeek); d.setDate(d.getDate()+7);
+    selectedWeek = dateToStr(d);
+  } else {
+    selectedMonth = addMonths(selectedMonth, 1);
+  }
+  render();
+});
+
+// Initialize selected periods
+selectedDate = todayStr();
+selectedWeek = getWeekStart(new Date());
+selectedMonth = getMonthPrefix(new Date());
 
 render();
 </script>
