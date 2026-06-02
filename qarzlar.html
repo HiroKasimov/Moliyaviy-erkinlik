@@ -6,462 +6,90 @@
 <title>Qarzlarim</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
-
   * { margin:0; padding:0; box-sizing:border-box; }
-
-  body {
-    background:#000;
-    color:#e0e0ff;
-    font-family:'Share Tech Mono', monospace;
-    min-height:100vh;
-    padding:20px 16px 80px;
-    overflow-x:hidden;
-  }
-
-  /* Animated grid background */
-  body::before {
-    content:'';
-    position:fixed;
-    inset:0;
-    background-image:
-      linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
-    background-size:40px 40px;
-    animation:gridMove 20s linear infinite;
-    pointer-events:none;
-    z-index:0;
-  }
-
-  @keyframes gridMove {
-    0%   { background-position:0 0; }
-    100% { background-position:40px 40px; }
-  }
-
-  /* Scanline overlay */
-  body::after {
-    content:'';
-    position:fixed;
-    inset:0;
-    background:repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.15) 2px,
-      rgba(0,0,0,0.15) 4px
-    );
-    pointer-events:none;
-    z-index:0;
-  }
-
+  body { background:#020208; color:#e0e0ff; font-family:'Share Tech Mono',monospace; min-height:100vh; padding:20px 16px 80px; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(0,255,255,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,255,0.07) 1px,transparent 1px); background-size:40px 40px; animation:gridMove 20s linear infinite; pointer-events:none; z-index:0; }
+  body::after { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px); pointer-events:none; z-index:0; }
+  @keyframes gridMove { 0%{background-position:0 0} 100%{background-position:40px 40px} }
   .content { position:relative; z-index:1; }
-
-  header {
-    text-align:center;
-    padding:30px 0 24px;
-    margin-bottom:24px;
-    position:relative;
-  }
-
-  header h1 {
-    font-family:'Orbitron', sans-serif;
-    font-size:24px;
-    font-weight:900;
-    color:#0ff;
-    text-shadow:
-      0 0 7px #0ff,
-      0 0 21px #0ff,
-      0 0 42px #0ff,
-      0 0 82px #0ff;
-    letter-spacing:4px;
-    animation:flicker 4s infinite;
-  }
-
-  @keyframes flicker {
-    0%,19%,21%,23%,25%,54%,56%,100% { opacity:1; }
-    20%,24%,55% { opacity:0.6; }
-  }
-
-  header p {
-    font-size:11px;
-    color:rgba(0,255,255,0.4);
-    letter-spacing:3px;
-    margin-top:6px;
-  }
-
-  .total-box {
-    border-radius:16px;
-    padding:24px 20px;
-    margin-bottom:28px;
-    text-align:center;
-    position:relative;
-    background:rgba(0,255,255,0.03);
-    border:1px solid rgba(0,255,255,0.3);
-    box-shadow:
-      0 0 20px rgba(0,255,255,0.1),
-      inset 0 0 30px rgba(0,255,255,0.03);
-    overflow:hidden;
-  }
-
-  .total-box::before {
-    content:'';
-    position:absolute;
-    top:-50%;left:-50%;
-    width:200%;height:200%;
-    background:conic-gradient(from 0deg, transparent 0deg, rgba(0,255,255,0.05) 60deg, transparent 120deg);
-    animation:rotate 6s linear infinite;
-  }
-
-  @keyframes rotate { to { transform:rotate(360deg); } }
-
-  .total-label {
-    font-size:10px;
-    color:rgba(0,255,255,0.5);
-    letter-spacing:3px;
-    text-transform:uppercase;
-    margin-bottom:10px;
-    position:relative;
-  }
-
-  .total-amount {
-    font-family:'Orbitron', sans-serif;
-    font-size:26px;
-    font-weight:900;
-    color:#ff3366;
-    text-shadow:
-      0 0 7px #ff3366,
-      0 0 21px #ff3366,
-      0 0 42px #ff3366;
-    position:relative;
-  }
-
-  .section {
-    margin-bottom:16px;
-    border-radius:12px;
-    overflow:hidden;
-    position:relative;
-  }
-
-  .section-header {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:14px 16px;
-    cursor:pointer;
-    user-select:none;
-    position:relative;
-    overflow:hidden;
-  }
-
-  .section-header::after {
-    content:'';
-    position:absolute;
-    bottom:0; left:0; right:0;
-    height:1px;
-    background:linear-gradient(90deg, transparent, var(--sec-color), transparent);
-    opacity:0.6;
-  }
-
-  .section-title {
-    font-family:'Orbitron', sans-serif;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:2px;
-  }
-
-  .section-right {
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-
-  .section-total {
-    font-size:12px;
-    font-weight:700;
-  }
-
-  .chevron {
-    font-size:10px;
-    transition:transform 0.3s;
-    display:inline-block;
-    opacity:0.7;
-  }
+  header { text-align:center; padding:30px 0 24px; margin-bottom:24px; }
+  header h1 { font-family:'Orbitron',sans-serif; font-size:22px; font-weight:900; color:#0ff; text-shadow:0 0 7px #0ff,0 0 21px #0ff,0 0 42px #0ff; letter-spacing:4px; animation:flicker 4s infinite; }
+  header p { font-size:10px; color:rgba(0,255,255,0.4); letter-spacing:3px; margin-top:6px; }
+  @keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100%{opacity:1} 20%,24%,55%{opacity:0.6} }
+  .total-box { border-radius:16px; padding:24px 20px; margin-bottom:28px; text-align:center; position:relative; background:rgba(0,255,255,0.03); border:1px solid rgba(0,255,255,0.3); box-shadow:0 0 20px rgba(0,255,255,0.1),inset 0 0 30px rgba(0,255,255,0.03); overflow:hidden; }
+  .total-box::before { content:''; position:absolute; top:-50%;left:-50%; width:200%;height:200%; background:conic-gradient(from 0deg,transparent 0deg,rgba(0,255,255,0.05) 60deg,transparent 120deg); animation:rotate 6s linear infinite; }
+  @keyframes rotate { to{transform:rotate(360deg)} }
+  .total-label { font-size:10px; color:rgba(0,255,255,0.5); letter-spacing:3px; text-transform:uppercase; margin-bottom:10px; position:relative; }
+  .total-amount { font-family:'Orbitron',sans-serif; font-size:24px; font-weight:900; color:#ff3366; text-shadow:0 0 7px #ff3366,0 0 21px #ff3366; position:relative; }
+  .section { margin-bottom:16px; border-radius:12px; overflow:hidden; position:relative; }
+  .section-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; cursor:pointer; user-select:none; position:relative; }
+  .section-title { font-family:'Orbitron',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; }
+  .chevron { font-size:10px; transition:transform 0.3s; display:inline-block; margin-left:8px; }
   .chevron.open { transform:rotate(180deg); }
-
-  .section-body {
-    display:none;
-    padding:12px;
-    background:rgba(0,0,0,0.7);
-    border-left:1px solid;
-    border-right:1px solid;
-    border-bottom:1px solid;
-    border-radius:0 0 12px 12px;
-  }
+  .section-body { display:none; padding:12px; background:rgba(0,0,0,0.7); border-top:1px solid #333; }
   .section-body.open { display:block; }
-
-  .debt-item {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:12px;
-    border-radius:8px;
-    margin-bottom:8px;
-    background:rgba(255,255,255,0.02);
-    border:1px solid rgba(255,255,255,0.06);
-    gap:10px;
-    transition:background 0.2s;
-    position:relative;
-    overflow:hidden;
-  }
-
-  .debt-item::before {
-    content:'';
-    position:absolute;
-    left:0; top:0; bottom:0;
-    width:2px;
-    background:var(--item-color, #0ff);
-    box-shadow:0 0 8px var(--item-color, #0ff);
-  }
-
+  .debt-item { display:flex; align-items:center; justify-content:space-between; padding:12px; border-radius:8px; margin-bottom:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); gap:10px; position:relative; overflow:hidden; }
+  .debt-item::before { content:''; position:absolute; left:0;top:0;bottom:0; width:2px; background:var(--ic,#0ff); box-shadow:0 0 8px var(--ic,#0ff); }
   .debt-info { flex:1; min-width:0; padding-left:8px; }
-
-  .debt-name {
-    font-size:11px;
-    color:rgba(255,255,255,0.35);
-    margin-bottom:4px;
-  }
-
-  .debt-amount {
-    font-family:'Orbitron', sans-serif;
-    font-size:13px;
-    font-weight:700;
-    color:#e0e0ff;
-  }
-
-  .debt-date {
-    font-size:10px;
-    margin-top:4px;
-    padding:2px 8px;
-    border-radius:20px;
-    display:inline-block;
-    letter-spacing:1px;
-  }
-
-  .urgent {
-    background:rgba(255,51,102,0.15);
-    color:#ff3366;
-    border:1px solid rgba(255,51,102,0.3);
-    box-shadow:0 0 8px rgba(255,51,102,0.2);
-  }
-  .soon {
-    background:rgba(255,170,0,0.12);
-    color:#ffaa00;
-    border:1px solid rgba(255,170,0,0.25);
-    box-shadow:0 0 8px rgba(255,170,0,0.15);
-  }
-  .later {
-    background:rgba(100,100,150,0.12);
-    color:#8888aa;
-    border:1px solid rgba(100,100,150,0.2);
-  }
-
-  .debt-actions {
-    display:flex;
-    flex-direction:column;
-    gap:5px;
-    flex-shrink:0;
-  }
-
-  .btn-edit, .btn-delete {
-    border:1px solid;
-    border-radius:5px;
-    padding:5px 10px;
-    font-size:10px;
-    cursor:pointer;
-    font-family:'Share Tech Mono', monospace;
-    background:transparent;
-    letter-spacing:1px;
-    transition:all 0.2s;
-  }
-
-  .btn-edit {
-    color:#ffaa00;
-    border-color:rgba(255,170,0,0.4);
-  }
-  .btn-edit:hover {
-    background:rgba(255,170,0,0.15);
-    box-shadow:0 0 10px rgba(255,170,0,0.3);
-  }
-
-  .btn-delete {
-    color:#ff3366;
-    border-color:rgba(255,51,102,0.4);
-  }
-  .btn-delete:hover {
-    background:rgba(255,51,102,0.15);
-    box-shadow:0 0 10px rgba(255,51,102,0.3);
-  }
-
-  .add-btn {
-    width:100%;
-    padding:10px;
-    background:transparent;
-    border:1px dashed rgba(0,255,136,0.4);
-    border-radius:8px;
-    color:#00ff88;
-    font-family:'Share Tech Mono', monospace;
-    font-size:11px;
-    cursor:pointer;
-    margin-top:6px;
-    letter-spacing:2px;
-    transition:all 0.2s;
-  }
-  .add-btn:hover {
-    background:rgba(0,255,136,0.07);
-    box-shadow:0 0 12px rgba(0,255,136,0.2);
-  }
-
-  /* MODAL */
-  .modal-overlay {
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,20,0.9);
-    z-index:100;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    backdrop-filter:blur(4px);
-  }
+  .debt-name { font-size:11px; color:rgba(255,255,255,0.35); margin-bottom:4px; }
+  .debt-amount { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; color:#e0e0ff; }
+  .debt-date { font-size:10px; margin-top:4px; padding:2px 8px; border-radius:20px; display:inline-block; letter-spacing:1px; }
+  .urgent { background:rgba(255,51,102,0.15); color:#ff3366; border:1px solid rgba(255,51,102,0.3); animation:pulse-urgent 2s infinite; }
+  .soon { background:rgba(255,170,0,0.12); color:#ffaa00; border:1px solid rgba(255,170,0,0.25); }
+  .later { background:rgba(100,100,150,0.12); color:#8888aa; border:1px solid rgba(100,100,150,0.2); }
+  @keyframes pulse-urgent { 0%,100%{box-shadow:0 0 5px rgba(255,51,102,0.2)} 50%{box-shadow:0 0 15px rgba(255,51,102,0.5)} }
+  .debt-actions { display:flex; flex-direction:column; gap:5px; flex-shrink:0; }
+  .btn-edit,.btn-delete { border:1px solid; border-radius:5px; padding:5px 10px; font-size:10px; cursor:pointer; font-family:'Share Tech Mono',monospace; background:transparent; letter-spacing:1px; }
+  .btn-edit { color:#ffaa00; border-color:rgba(255,170,0,0.4); }
+  .btn-delete { color:#ff3366; border-color:rgba(255,51,102,0.4); }
+  .add-btn { width:100%; padding:10px; background:transparent; border:1px dashed rgba(0,255,136,0.4); border-radius:8px; color:#00ff88; font-family:'Share Tech Mono',monospace; font-size:11px; cursor:pointer; margin-top:6px; letter-spacing:2px; }
+  .empty { text-align:center; color:rgba(255,255,255,0.2); font-size:11px; padding:20px; letter-spacing:2px; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,20,0.9); z-index:100; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
   .modal-overlay.open { display:flex; }
-
-  .modal {
-    background:#000814;
-    border:1px solid rgba(0,255,255,0.3);
-    border-radius:16px;
-    padding:28px;
-    width:100%;
-    max-width:380px;
-    box-shadow:
-      0 0 30px rgba(0,255,255,0.1),
-      inset 0 0 20px rgba(0,255,255,0.03);
-    position:relative;
-    overflow:hidden;
-  }
-
-  .modal::before {
-    content:'';
-    position:absolute;
-    top:0; left:0; right:0;
-    height:1px;
-    background:linear-gradient(90deg, transparent, #0ff, transparent);
-  }
-
-  .modal h3 {
-    font-family:'Orbitron', sans-serif;
-    font-size:13px;
-    margin-bottom:22px;
-    color:#0ff;
-    text-shadow:0 0 10px #0ff;
-    letter-spacing:2px;
-  }
-
+  .modal { background:#000814; border:1px solid rgba(0,255,255,0.3); border-radius:16px; padding:28px; width:100%; max-width:380px; box-shadow:0 0 30px rgba(0,255,255,0.1); position:relative; overflow:hidden; }
+  .modal::before { content:''; position:absolute; top:0;left:0;right:0; height:1px; background:linear-gradient(90deg,transparent,#0ff,transparent); }
+  .modal h3 { font-family:'Orbitron',sans-serif; font-size:13px; margin-bottom:22px; color:#0ff; text-shadow:0 0 10px #0ff; letter-spacing:2px; }
   .form-group { margin-bottom:16px; }
-
-  .form-group label {
-    display:block;
-    font-size:10px;
-    color:rgba(0,255,255,0.5);
-    margin-bottom:7px;
-    letter-spacing:2px;
-    text-transform:uppercase;
-  }
-
-  .form-group input {
-    width:100%;
-    background:rgba(0,255,255,0.04);
-    border:1px solid rgba(0,255,255,0.2);
-    border-radius:8px;
-    padding:10px 14px;
-    color:#e0e0ff;
-    font-family:'Share Tech Mono', monospace;
-    font-size:13px;
-    outline:none;
-    transition:border-color 0.2s, box-shadow 0.2s;
-  }
-  .form-group input:focus {
-    border-color:rgba(0,255,255,0.6);
-    box-shadow:0 0 12px rgba(0,255,255,0.15);
-  }
-
+  .form-group label { display:block; font-size:10px; color:rgba(0,255,255,0.5); margin-bottom:7px; letter-spacing:2px; text-transform:uppercase; }
+  .form-group input,.form-group select { width:100%; background:rgba(0,255,255,0.04); border:1px solid rgba(0,255,255,0.2); border-radius:8px; padding:10px 14px; color:#e0e0ff; font-family:'Share Tech Mono',monospace; font-size:13px; outline:none; }
+  .form-group input:focus,.form-group select:focus { border-color:rgba(0,255,255,0.6); }
+  .form-group select option { background:#000814; }
   .modal-btns { display:flex; gap:10px; margin-top:22px; }
-
-  .btn-save {
-    flex:1; padding:12px;
-    background:rgba(0,255,255,0.1);
-    border:1px solid rgba(0,255,255,0.5);
-    border-radius:8px;
-    color:#0ff;
-    font-family:'Orbitron', sans-serif;
-    font-size:11px;
-    font-weight:700;
-    cursor:pointer;
-    letter-spacing:2px;
-    text-shadow:0 0 8px #0ff;
-    transition:all 0.2s;
-  }
-  .btn-save:hover {
-    background:rgba(0,255,255,0.2);
-    box-shadow:0 0 20px rgba(0,255,255,0.3);
-  }
-
-  .btn-cancel {
-    flex:1; padding:12px;
-    background:transparent;
-    border:1px solid rgba(255,255,255,0.1);
-    border-radius:8px;
-    color:rgba(255,255,255,0.3);
-    font-family:'Share Tech Mono', monospace;
-    font-size:11px;
-    cursor:pointer;
-    transition:all 0.2s;
-  }
-
-  .empty {
-    text-align:center;
-    color:rgba(255,255,255,0.2);
-    font-size:11px;
-    padding:20px;
-    letter-spacing:2px;
-  }
-
-  /* Pulse animation for urgent items */
-  @keyframes pulse {
-    0%,100% { box-shadow:0 0 5px rgba(255,51,102,0.3); }
-    50%      { box-shadow:0 0 15px rgba(255,51,102,0.6); }
-  }
-  .debt-item.is-urgent { animation:pulse 2s infinite; }
+  .btn-save { flex:1; padding:12px; background:rgba(0,255,255,0.1); border:1px solid rgba(0,255,255,0.5); border-radius:8px; color:#0ff; font-family:'Orbitron',sans-serif; font-size:11px; font-weight:700; cursor:pointer; letter-spacing:2px; }
+  .btn-cancel { flex:1; padding:12px; background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:rgba(255,255,255,0.3); font-family:'Share Tech Mono',monospace; font-size:11px; cursor:pointer; }
+  .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,255,136,0.15); border:1px solid rgba(0,255,136,0.4); color:#00ff88; padding:10px 24px; border-radius:30px; font-size:12px; letter-spacing:2px; z-index:200; display:none; }
+  .toast.show { display:block; animation:fadeInOut 2s forwards; }
+  @keyframes fadeInOut { 0%{opacity:0;transform:translateX(-50%) translateY(10px)} 20%{opacity:1;transform:translateX(-50%) translateY(0)} 80%{opacity:1} 100%{opacity:0} }
+  .loading { text-align:center; color:rgba(0,255,255,0.5); font-size:12px; padding:40px; letter-spacing:3px; }
 </style>
 </head>
 <body>
 <div class="content">
-
-<header>
-  <h1>⚡ QARZLARIM</h1>
-  <p>DEBT TRACKER v1.0</p>
-</header>
-
-<div class="total-box">
-  <div class="total-label">[ UMUMIY QARZ ]</div>
-  <div class="total-amount" id="totalAmount">0 so'm</div>
+  <header>
+    <h1>⚡ QARZLARIM</h1>
+    <p>MOLIYAVIY ERKINLIK v2.0</p>
+  </header>
+  <div class="total-box">
+    <div class="total-label">[ UMUMIY QARZ ]</div>
+    <div class="total-amount" id="totalAmount">Yuklanmoqda...</div>
+  </div>
+  <div id="sectionsContainer"><div class="loading">[ FIREBASE ULANMOQDA... ]</div></div>
 </div>
-
-<div id="sectionsContainer"></div>
-
-</div><!-- .content -->
 
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h3 id="modalTitle">QARZ QO'SHISH</h3>
+    <div class="form-group">
+      <label>Bo'lim</label>
+      <select id="inputSection">
+        <option value="uzum">🏦 Uzum Bank</option>
+        <option value="payme">📱 Payme</option>
+        <option value="yengil">💰 Yengil Kredit</option>
+        <option value="paylater">💳 Pay Later</option>
+        <option value="tebo">🛵 Tebo Skuter</option>
+        <option value="boshqa">📦 Boshqa</option>
+      </select>
+    </div>
     <div class="form-group">
       <label>Nomi</label>
       <input type="text" id="inputName" placeholder="Masalan: Korzinka">
@@ -476,277 +104,242 @@
     </div>
     <div class="modal-btns">
       <button class="btn-cancel" id="btnCancel">BEKOR</button>
-      <button class="btn-save"   id="btnSave">SAQLASH</button>
+      <button class="btn-save" id="btnSave">SAQLASH</button>
     </div>
   </div>
 </div>
 
-<script>
-var SECTIONS = [
-  { id:'uzum',     name:'🏦 UZUM BANK',     color:'#00ff88', bg:'rgba(0,255,136,0.06)',  border:'rgba(0,255,136,0.25)'  },
-  { id:'payme',    name:'📱 PAYME',          color:'#ff6b00', bg:'rgba(255,107,0,0.06)',  border:'rgba(255,107,0,0.25)'  },
-  { id:'yengil',   name:'💰 YENGIL KREDIT',  color:'#ff2255', bg:'rgba(255,34,85,0.06)',  border:'rgba(255,34,85,0.25)'  },
-  { id:'paylater', name:'💳 PAY LATER',       color:'#cc44ff', bg:'rgba(204,68,255,0.06)', border:'rgba(204,68,255,0.25)' },
-  { id:'tebo',     name:'🛵 TEBO SKUTER',    color:'#00ccff', bg:'rgba(0,204,255,0.06)',  border:'rgba(0,204,255,0.25)'  },
-  { id:'boshqa',   name:'📦 BOSHQA',          color:'#ffdd00', bg:'rgba(255,221,0,0.06)',  border:'rgba(255,221,0,0.25)'  }
-];
+<div class="toast" id="toast"></div>
 
-var data = {
-  uzum: [
-    {id:1,name:'12-may qarz',amount:799999,  date:'2026-06-11'},
-    {id:2,name:'14-may qarz',amount:735000,  date:'2026-06-13'},
-    {id:3,name:'15-may (1)', amount:262500,  date:'2026-06-14'},
-    {id:4,name:'15-may (2)', amount:64575,   date:'2026-06-14'},
-    {id:5,name:'16-may qarz',amount:105000,  date:'2026-06-15'},
-    {id:6,name:'17-may qarz',amount:1632925, date:'2026-06-16'}
-  ],
-  payme: [
-    {id:1, name:'Korzinka',amount:29960,date:'2026-05-19'},
-    {id:2, name:'Korzinka',amount:72450,date:'2026-05-22'},
-    {id:3, name:'Korzinka',amount:38010,date:'2026-05-24'},
-    {id:4, name:'Kassa 2', amount:20500,date:'2026-05-25'},
-    {id:5, name:'Korzinka',amount:44630,date:'2026-05-31'},
-    {id:6, name:'Korzinka',amount:27490,date:'2026-06-04'},
-    {id:7, name:'Korzinka',amount:38328,date:'2026-06-08'},
-    {id:8, name:'Korzinka',amount:28070,date:'2026-06-11'},
-    {id:9, name:'Korzinka',amount:36570,date:'2026-06-13'},
-    {id:10,name:'Korzinka',amount:36174,date:'2026-06-13'},
-    {id:11,name:'Korzinka',amount:78820,date:'2026-06-14'}
-  ],
-  yengil: [
-    {id:1,name:'1-oy',amount:211415,date:'2026-05-27'},
-    {id:2,name:'2-oy',amount:213000,date:'2026-06-27'},
-    {id:3,name:'3-oy',amount:213000,date:'2026-07-27'},
-    {id:4,name:'4-oy',amount:206280,date:'2026-08-27'}
-  ],
-  paylater: [
-    {id:1,name:'1-oy',amount:680000,date:'2026-06-01'},
-    {id:2,name:'2-oy',amount:680000,date:'2026-07-01'},
-    {id:3,name:'3-oy',amount:680000,date:'2026-08-01'},
-    {id:4,name:'4-oy',amount:680000,date:'2026-09-01'},
-    {id:5,name:'5-oy',amount:680000,date:'2026-10-01'},
-    {id:6,name:'6-oy',amount:680000,date:'2026-11-01'},
-    {id:7,name:'7-oy',amount:680000,date:'2026-12-01'},
-    {id:8,name:'8-oy',amount:680000,date:'2027-01-01'}
-  ],
-  tebo: [
-    {id:1,name:'1-oy',amount:829000,date:'2026-06-18'},
-    {id:2,name:'2-oy',amount:829000,date:'2026-07-18'},
-    {id:3,name:'3-oy',amount:829000,date:'2026-08-18'},
-    {id:4,name:'4-oy',amount:829000,date:'2026-09-18'},
-    {id:5,name:'5-oy',amount:829000,date:'2026-10-18'},
-    {id:6,name:'6-oy',amount:829000,date:'2026-11-18'},
-    {id:7,name:'7-oy',amount:829000,date:'2026-12-18'},
-    {id:8,name:'8-oy',amount:829000,date:'2027-01-18'},
-    {id:9,name:'9-oy',amount:829000,date:'2027-02-18'}
-  ],
-  boshqa:[]
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBRAXmQ98Akn4ZX4dJZ1RUPOQ5Zvl9lR6k",
+  authDomain: "moliyaviy-erkinlik.firebaseapp.com",
+  databaseURL: "https://moliyaviy-erkinlik-default-rtdb.firebaseio.com",
+  projectId: "moliyaviy-erkinlik",
+  storageBucket: "moliyaviy-erkinlik.firebasestorage.app",
+  messagingSenderId: "404181581489",
+  appId: "1:404181581489:web:2945fa8e654363e4952c90"
 };
 
-var editState=null, addState=null;
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-function fmt(n) {
-  var s=Number(n).toLocaleString('ru-RU');
-  return s+" so'm";
-}
+const SECTIONS = [
+  {id:'uzum',     name:'🏦 UZUM BANK',    color:'#00ff88', bg:'rgba(0,255,136,0.06)',  border:'rgba(0,255,136,0.25)'},
+  {id:'payme',    name:'📱 PAYME',         color:'#ff6b00', bg:'rgba(255,107,0,0.06)',  border:'rgba(255,107,0,0.25)'},
+  {id:'yengil',   name:'💰 YENGIL KREDIT', color:'#ff2255', bg:'rgba(255,34,85,0.06)',  border:'rgba(255,34,85,0.25)'},
+  {id:'paylater', name:'💳 PAY LATER',      color:'#cc44ff', bg:'rgba(204,68,255,0.06)', border:'rgba(204,68,255,0.25)'},
+  {id:'tebo',     name:'🛵 TEBO SKUTER',   color:'#00ccff', bg:'rgba(0,204,255,0.06)',  border:'rgba(0,204,255,0.25)'},
+  {id:'boshqa',   name:'📦 BOSHQA',         color:'#ffdd00', bg:'rgba(255,221,0,0.06)',  border:'rgba(255,221,0,0.25)'}
+];
 
-function secTotal(id) {
-  var arr=data[id]||[],s=0;
-  for(var i=0;i<arr.length;i++) s+=Number(arr[i].amount);
-  return s;
-}
+let liveData = {};
+let editState = null;
+let addState  = null;
+let openSections = {};
 
-function grandTotal() {
-  var s=0;
-  for(var i=0;i<SECTIONS.length;i++) s+=secTotal(SECTIONS[i].id);
-  return s;
-}
+function fmt(n) { return Number(n).toLocaleString('ru-RU') + " so'm"; }
 
 function urgClass(dateStr) {
-  var diff=Math.ceil((new Date(dateStr)-new Date())/86400000);
-  if(diff<=7)  return 'urgent';
-  if(diff<=20) return 'soon';
+  const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
+  if (diff <= 7)  return 'urgent';
+  if (diff <= 20) return 'soon';
   return 'later';
 }
 
 function fmtDate(dateStr) {
-  var d=new Date(dateStr);
-  var m=['Jan','Feb','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
-  return d.getDate()+' '+m[d.getMonth()]+' '+d.getFullYear();
+  if(!dateStr) return '';
+  const p = dateStr.substring(0,10).split('-');
+  const m = ['Yan','Feb','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
+  return parseInt(p[2])+' '+m[parseInt(p[1])-1];
+}
+
+function grandTotal() {
+  let s = 0;
+  SECTIONS.forEach(sec => {
+    Object.values(liveData[sec.id] || {}).forEach(d => { s += Number(d.amount||0); });
+  });
+  return s;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show';
+  setTimeout(() => { t.className = 'toast'; }, 2000);
 }
 
 function render() {
-  document.getElementById('totalAmount').textContent=fmt(grandTotal());
-  var container=document.getElementById('sectionsContainer');
-  container.innerHTML='';
+  document.getElementById('totalAmount').textContent = fmt(grandTotal());
+  const container = document.getElementById('sectionsContainer');
+  container.innerHTML = '';
 
-  for(var si=0;si<SECTIONS.length;si++) {
-    var sec=SECTIONS[si];
-    var debts=data[sec.id]||[];
-    var total=secTotal(sec.id);
-    var isOpen=!!sec._open;
+  SECTIONS.forEach(sec => {
+    const rawDebts = liveData[sec.id] || {};
+    const debts = Object.entries(rawDebts).map(([key, val]) => ({...val, _key: key}));
+    const total = debts.reduce((s, d) => s + Number(d.amount||0), 0);
+    const isOpen = !!openSections[sec.id];
 
-    var section=document.createElement('div');
-    section.className='section';
-    section.style.cssText='border:1px solid '+sec.border+';box-shadow:0 0 15px '+sec.border.replace('0.25','0.08')+';';
+    const section = document.createElement('div');
+    section.className = 'section';
+    section.style.cssText = 'border:1px solid '+sec.border+';box-shadow:0 0 12px '+sec.border.replace('0.25','0.06')+';';
 
-    var header=document.createElement('div');
-    header.className='section-header';
-    header.style.cssText='background:'+sec.bg+';--sec-color:'+sec.color+';';
-    header.setAttribute('data-toggle',sec.id);
-    header.innerHTML=
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    header.style.cssText = 'background:'+sec.bg+';border-bottom:1px solid '+sec.border+';';
+    header.setAttribute('data-toggle', sec.id);
+    header.innerHTML =
       '<span class="section-title" style="color:'+sec.color+';text-shadow:0 0 10px '+sec.color+'">'+sec.name+'</span>'+
-      '<span class="section-right">'+
-        '<span class="section-total" style="color:'+sec.color+';text-shadow:0 0 8px '+sec.color+'">'+fmt(total)+'</span>'+
+      '<span style="display:flex;align-items:center;gap:8px">'+
+        '<span style="color:'+sec.color+';font-size:12px;font-weight:700;text-shadow:0 0 8px '+sec.color+'">'+fmt(total)+'</span>'+
         '<span class="chevron '+(isOpen?'open':'')+'" style="color:'+sec.color+'">▼</span>'+
       '</span>';
 
-    var body=document.createElement('div');
-    body.className='section-body'+(isOpen?' open':'');
-    body.style.cssText='border-color:'+sec.border+';';
+    const body = document.createElement('div');
+    body.className = 'section-body'+(isOpen?' open':'');
 
-    if(debts.length===0) {
-      body.innerHTML='<div class="empty">[ QARZLARsiz ]</div>';
+    if (debts.length === 0) {
+      body.innerHTML = '<div class="empty">[ QARZ YO\'Q ]</div>';
     } else {
-      for(var di=0;di<debts.length;di++) {
-        var d=debts[di];
-        var urg=urgClass(d.date);
-        var item=document.createElement('div');
-        item.className='debt-item'+(urg==='urgent'?' is-urgent':'');
-        item.style.setProperty('--item-color', sec.color);
+      debts.forEach(d => {
+        const urg = urgClass(d.date);
+        const item = document.createElement('div');
+        item.className = 'debt-item';
+        item.style.setProperty('--ic', sec.color);
 
-        var info=document.createElement('div');
-        info.className='debt-info';
-        info.innerHTML=
+        const info = document.createElement('div');
+        info.className = 'debt-info';
+        info.innerHTML =
           '<div class="debt-name">'+d.name+'</div>'+
           '<div class="debt-amount">'+fmt(d.amount)+'</div>'+
           '<span class="debt-date '+urg+'">'+fmtDate(d.date)+'</span>';
 
-        var actions=document.createElement('div');
-        actions.className='debt-actions';
+        const actions = document.createElement('div');
+        actions.className = 'debt-actions';
 
-        var editBtn=document.createElement('button');
-        editBtn.className='btn-edit';
-        editBtn.textContent='✏ EDIT';
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn-edit';
+        editBtn.textContent = '✏ EDIT';
         editBtn.setAttribute('data-action','edit');
-        editBtn.setAttribute('data-sec',sec.id);
-        editBtn.setAttribute('data-id',String(d.id));
+        editBtn.setAttribute('data-sec', sec.id);
+        editBtn.setAttribute('data-key', d._key);
 
-        var delBtn=document.createElement('button');
-        delBtn.className='btn-delete';
-        delBtn.textContent="🗑 DEL";
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn-delete';
+        delBtn.textContent = '🗑 DEL';
         delBtn.setAttribute('data-action','delete');
-        delBtn.setAttribute('data-sec',sec.id);
-        delBtn.setAttribute('data-id',String(d.id));
+        delBtn.setAttribute('data-sec', sec.id);
+        delBtn.setAttribute('data-key', d._key);
 
         actions.appendChild(editBtn);
         actions.appendChild(delBtn);
         item.appendChild(info);
         item.appendChild(actions);
         body.appendChild(item);
-      }
+      });
     }
 
-    var addBtn=document.createElement('button');
-    addBtn.className='add-btn';
-    addBtn.textContent='+ QARZ QO\'SHISH';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-btn';
+    addBtn.textContent = "+ QARZ QO'SHISH";
     addBtn.setAttribute('data-action','add');
-    addBtn.setAttribute('data-sec',sec.id);
+    addBtn.setAttribute('data-sec', sec.id);
     body.appendChild(addBtn);
 
     section.appendChild(header);
     section.appendChild(body);
     container.appendChild(section);
-  }
+  });
 }
 
-document.getElementById('sectionsContainer').addEventListener('click',function(e) {
-  var t=e.target;
-
-  var toggleEl=t.closest('[data-toggle]');
-  if(toggleEl && !t.getAttribute('data-action')) {
-    var sid=toggleEl.getAttribute('data-toggle');
-    for(var i=0;i<SECTIONS.length;i++){
-      if(SECTIONS[i].id===sid){ SECTIONS[i]._open=!SECTIONS[i]._open; break; }
-    }
-    render(); return;
-  }
-
-  var action=t.getAttribute('data-action');
-  if(!action) return;
-
-  var secId=t.getAttribute('data-sec');
-  var debtId=parseInt(t.getAttribute('data-id'),10);
-
-  if(action==='delete') {
-    var arr=data[secId]||[], newArr=[];
-    for(var i=0;i<arr.length;i++){ if(arr[i].id!==debtId) newArr.push(arr[i]); }
-    data[secId]=newArr;
-    render(); return;
-  }
-
-  if(action==='edit') {
-    var arr=data[secId]||[], debt=null;
-    for(var i=0;i<arr.length;i++){ if(arr[i].id===debtId){ debt=arr[i]; break; } }
-    if(!debt) return;
-    editState={sectionId:secId,debtId:debtId};
-    addState=null;
-    document.getElementById('modalTitle').textContent='QARZNI TAHRIRLASH';
-    document.getElementById('inputName').value=debt.name;
-    document.getElementById('inputAmount').value=debt.amount;
-    document.getElementById('inputDate').value=debt.date;
-    document.getElementById('modalOverlay').className='modal-overlay open';
-    return;
-  }
-
-  if(action==='add') {
-    addState=secId; editState=null;
-    document.getElementById('modalTitle').textContent="QARZ QO'SHISH";
-    document.getElementById('inputName').value='';
-    document.getElementById('inputAmount').value='';
-    document.getElementById('inputDate').value='';
-    document.getElementById('modalOverlay').className='modal-overlay open';
-    return;
-  }
-});
-
-document.getElementById('btnCancel').addEventListener('click',function(){
-  document.getElementById('modalOverlay').className='modal-overlay';
-  editState=null; addState=null;
-});
-
-document.getElementById('btnSave').addEventListener('click',function(){
-  var name=document.getElementById('inputName').value.trim();
-  var amount=parseInt(document.getElementById('inputAmount').value,10);
-  var date=document.getElementById('inputDate').value;
-  if(!name||!amount||!date){ alert("To'ldiring!"); return; }
-
-  if(editState) {
-    var arr=data[editState.sectionId]||[];
-    for(var i=0;i<arr.length;i++){
-      if(arr[i].id===editState.debtId){ arr[i]={id:editState.debtId,name:name,amount:amount,date:date}; break; }
-    }
-  } else if(addState) {
-    var arr=data[addState]||[];
-    var maxId=0;
-    for(var i=0;i<arr.length;i++){ if(arr[i].id>maxId) maxId=arr[i].id; }
-    arr.push({id:maxId+1,name:name,amount:amount,date:date});
-    data[addState]=arr;
-  }
-
-  document.getElementById('modalOverlay').className='modal-overlay';
-  editState=null; addState=null;
+onValue(ref(db, 'qarzlar'), (snapshot) => {
+  const val = snapshot.val();
+  liveData = val || {};
   render();
 });
 
-document.getElementById('modalOverlay').addEventListener('click',function(e){
-  if(e.target===this){
-    this.className='modal-overlay';
-    editState=null; addState=null;
+document.getElementById('sectionsContainer').addEventListener('click', function(e) {
+  const t = e.target;
+  const toggleEl = t.closest('[data-toggle]');
+  if (toggleEl && !t.getAttribute('data-action')) {
+    const sid = toggleEl.getAttribute('data-toggle');
+    openSections[sid] = !openSections[sid];
+    render(); return;
+  }
+
+  const action = t.getAttribute('data-action');
+  if (!action) return;
+  const secId = t.getAttribute('data-sec');
+  const key   = t.getAttribute('data-key');
+
+  if (action === 'delete') {
+    remove(ref(db, 'qarzlar/'+secId+'/'+key));
+    showToast('✅ O\'CHIRILDI');
+    return;
+  }
+
+  if (action === 'edit') {
+    const debt = (liveData[secId]||{})[key];
+    if (!debt) return;
+    editState = {secId, key};
+    addState = null;
+    document.getElementById('modalTitle').textContent = 'QARZNI TAHRIRLASH';
+    document.getElementById('inputSection').value  = secId;
+    document.getElementById('inputSection').disabled = true;
+    document.getElementById('inputName').value   = debt.name;
+    document.getElementById('inputAmount').value = debt.amount;
+    document.getElementById('inputDate').value   = debt.date;
+    document.getElementById('modalOverlay').className = 'modal-overlay open';
+    return;
+  }
+
+  if (action === 'add') {
+    addState = secId; editState = null;
+    document.getElementById('modalTitle').textContent = "QARZ QO'SHISH";
+    document.getElementById('inputSection').value = secId;
+    document.getElementById('inputSection').disabled = false;
+    document.getElementById('inputName').value   = '';
+    document.getElementById('inputAmount').value = '';
+    document.getElementById('inputDate').value   = '';
+    document.getElementById('modalOverlay').className = 'modal-overlay open';
+    return;
   }
 });
 
-render();
+document.getElementById('btnCancel').addEventListener('click', () => {
+  document.getElementById('modalOverlay').className = 'modal-overlay';
+  editState = null; addState = null;
+});
+
+document.getElementById('btnSave').addEventListener('click', () => {
+  const secId  = document.getElementById('inputSection').value;
+  const name   = document.getElementById('inputName').value.trim();
+  const amount = parseInt(document.getElementById('inputAmount').value, 10);
+  const date   = document.getElementById('inputDate').value;
+  if (!name || !amount || !date) { showToast('⚠ TO\'LDIRING!'); return; }
+
+  if (editState) {
+    set(ref(db, 'qarzlar/'+editState.secId+'/'+editState.key), {name, amount, date});
+    showToast('✅ SAQLANDI');
+  } else {
+    const newRef = push(ref(db, 'qarzlar/'+secId));
+    set(newRef, {name, amount, date});
+    showToast('✅ QO\'SHILDI');
+  }
+
+  document.getElementById('modalOverlay').className = 'modal-overlay';
+  editState = null; addState = null;
+});
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.className = 'modal-overlay';
+    editState = null; addState = null;
+  }
+});
 </script>
 </body>
 </html>
