@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daromad & Xarajat</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  background:#020208;
+  color:#e0e0ff;
+  font-family:'Share Tech Mono',monospace;
+  min-height:100vh;
+  padding:20px 16px 100px;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.07) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,136,0.07) 1px,transparent 1px);
+  background-size:40px 40px;
+  animation:grid 25s linear infinite;
+  pointer-events:none;z-index:0;
+}
+@keyframes grid{0%{background-position:0 0}100%{background-position:40px 40px}}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.1) 3px,rgba(0,0,0,0.1) 4px);
+  pointer-events:none;z-index:0;
+}
+
+.wrap{position:relative;z-index:1;}
+
+header{text-align:center;padding:28px 0 20px;margin-bottom:20px;}
+header h1{
+  font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;
+  color:#00ff88;
+  text-shadow:0 0 7px #00ff88,0 0 21px #00ff88,0 0 42px #00ff88;
+  letter-spacing:4px;animation:flicker 5s infinite;
+}
+header p{font-size:10px;color:rgba(0,255,136,0.4);letter-spacing:3px;margin-top:5px;}
+@keyframes flicker{0%,19%,21%,23%,54%,56%,100%{opacity:1}20%,22%,55%{opacity:0.5}}
+
+/* Summary cards */
+.summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
+.card{
+  border-radius:12px;padding:14px 10px;text-align:center;position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cc),transparent);
+}
+.card-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;opacity:0.6;}
+.card-val{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;}
+
+.card-in{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.6);--cc:#00ff88;box-shadow:0 0 18px rgba(0,255,136,0.2),inset 0 0 20px rgba(0,255,136,0.05);}
+.card-in .card-val{color:#00ff88;text-shadow:0 0 8px #00ff88,0 0 20px #00ff88,0 0 40px #00ff88;}
+
+.card-out{background:rgba(255,51,102,0.1);border:1px solid rgba(255,51,102,0.6);--cc:#ff3366;box-shadow:0 0 18px rgba(255,51,102,0.2),inset 0 0 20px rgba(255,51,102,0.05);}
+.card-out .card-val{color:#ff3366;text-shadow:0 0 8px #ff3366,0 0 20px #ff3366,0 0 40px #ff3366;}
+
+.card-net{background:rgba(0,204,255,0.1);border:1px solid rgba(0,204,255,0.6);--cc:#00ccff;box-shadow:0 0 18px rgba(0,204,255,0.2),inset 0 0 20px rgba(0,204,255,0.05);}
+.card-net .card-val{color:#00ccff;text-shadow:0 0 8px #00ccff,0 0 20px #00ccff,0 0 40px #00ccff;}
+
+/* Period selector */
+.period-bar{
+  display:flex;gap:8px;margin-bottom:20px;
+  
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px;padding:4px;
+}
+.period-btn{
+  flex:1;padding:8px;border:none;background:transparent;
+  color:rgba(255,255,255,0.3);font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:2px;cursor:pointer;border-radius:8px;
+  transition:all 0.2s;
+}
+
+.nav-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+  background:rgba(0,255,136,0.04);
+  border:1px solid rgba(0,255,136,0.2);
+  border-radius:10px;padding:8px 14px;
+}
+.nav-btn{
+  background:transparent;border:1px solid rgba(0,255,136,0.3);
+  border-radius:6px;color:#00ff88;padding:4px 12px;
+  font-size:14px;cursor:pointer;
+}
+.nav-label{
+  font-family:'Orbitron',sans-serif;font-size:11px;
+  color:#00ff88;letter-spacing:2px;text-align:center;
+}
+.period-btn.active{
+  background:rgba(0,255,136,0.15);color:#00ff88;
+  box-shadow:0 0 10px rgba(0,255,136,0.2);
+}
+
+/* Add buttons */
+.add-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.add-btn-main{
+  padding:14px;border:1px solid;border-radius:12px;
+  font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:2px;cursor:pointer;background:transparent;transition:all 0.2s;
+}
+.add-btn-in{color:#00ff88;border-color:rgba(0,255,136,0.6);box-shadow:0 0 12px rgba(0,255,136,0.15);}
+.add-btn-in:hover{background:rgba(0,255,136,0.15);box-shadow:0 0 25px rgba(0,255,136,0.4);}
+.add-btn-out{color:#ff3366;border-color:rgba(255,51,102,0.6);box-shadow:0 0 12px rgba(255,51,102,0.15);}
+.add-btn-out:hover{background:rgba(255,51,102,0.15);box-shadow:0 0 25px rgba(255,51,102,0.4);}
+
+/* Transactions */
+.section-title-tx{
+  font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:3px;
+  color:rgba(255,255,255,0.3);margin-bottom:12px;padding-bottom:8px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.tx-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px;border-radius:10px;margin-bottom:8px;
+  background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);
+  position:relative;overflow:hidden;gap:10px;
+}
+.tx-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--tc);box-shadow:0 0 6px var(--tc);
+}
+.tx-left{flex:1;padding-left:10px;}
+.tx-cat{font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:3px;}
+.tx-name{font-size:13px;color:#e0e0ff;}
+.tx-date{font-size:10px;color:rgba(255,255,255,0.25);margin-top:2px;}
+.tx-right{text-align:right;flex-shrink:0;}
+.tx-amount{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;}
+.tx-del{
+  background:rgba(255,51,102,0.15);border:1px solid rgba(255,51,102,0.3);
+  color:#ff3366;border-radius:6px;padding:4px 8px;font-size:10px;
+  cursor:pointer;font-family:'Share Tech Mono',monospace;margin-top:4px;
+}
+
+.empty-state{
+  text-align:center;padding:40px 20px;
+  color:rgba(255,255,255,0.2);font-size:11px;letter-spacing:2px;
+}
+
+/* Chart */
+.chart-wrap{
+  background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.35);box-shadow:0 0 15px rgba(0,255,136,0.1);
+  border-radius:12px;padding:16px;margin-bottom:20px;
+}
+.chart-title{font-size:10px;color:rgba(0,255,136,0.5);letter-spacing:3px;margin-bottom:14px;}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:80px;}
+.bar-group{flex:1;display:flex;gap:2px;align-items:flex-end;}
+.bar{
+  flex:1;border-radius:3px 3px 0 0;min-height:2px;
+  transition:height 0.5s ease;position:relative;
+}
+.bar-in{background:linear-gradient(to top,#00ff88,rgba(0,255,136,0.3));}
+.bar-out{background:linear-gradient(to top,#ff3366,rgba(255,51,102,0.3));}
+.chart-labels{display:flex;gap:6px;margin-top:6px;}
+.chart-label{flex:1;text-align:center;font-size:9px;color:rgba(255,255,255,0.25);}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,20,0.92);z-index:100;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);}
+.modal-overlay.open{display:flex;}
+.modal{background:#000814;border:1px solid rgba(0,255,136,0.3);border-radius:16px;padding:26px;width:100%;max-width:360px;position:relative;overflow:hidden;}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--modal-color,#00ff88),transparent);}
+.modal h3{font-family:'Orbitron',sans-serif;font-size:13px;margin-bottom:20px;letter-spacing:2px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;letter-spacing:2px;text-transform:uppercase;}
+.fg input,.fg select{
+  width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;padding:10px 12px;color:#e0e0ff;
+  font-family:'Share Tech Mono',monospace;font-size:13px;outline:none;
+}
+.fg input:focus,.fg select:focus{border-color:rgba(0,255,136,0.5);}
+.fg select option{background:#000814;}
+.modal-btns{display:flex;gap:10px;margin-top:18px;}
+.btn-save{flex:1;padding:12px;border:1px solid rgba(0,255,136,0.5);background:rgba(0,255,136,0.1);border-radius:8px;color:#00ff88;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:2px;}
+.btn-cancel{flex:1;padding:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);background:transparent;border-radius:8px;color:rgba(255,255,255,0.3);font-family:'Share Tech Mono',monospace;font-size:11px;cursor:pointer;}
+
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.4);color:#00ff88;padding:10px 24px;border-radius:30px;font-size:11px;letter-spacing:2px;z-index:200;display:none;}
+.toast.show{display:block;animation:fadeOut 2s forwards;}
+.home-link{display:inline-block;margin-top:12px;font-size:10px;letter-spacing:2px;color:rgba(0,255,136,0.65);border:1px solid rgba(0,255,136,0.3);border-radius:20px;padding:6px 16px;text-decoration:none;background:rgba(0,255,136,0.04);}
+.home-link:active{background:rgba(0,255,136,0.15);}
+@keyframes fadeOut{0%{opacity:0;transform:translateX(-50%) translateY(8px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}80%{opacity:1}100%{opacity:0}}
+</style>
+</head>
+<body>
+<a href="https://hirokasimov.github.io/Control-Center-/" style="position:fixed;top:14px;left:14px;z-index:999;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;background:rgba(2,2,8,0.85);border:1px solid rgba(0,255,136,0.4);color:#00ff88;text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;text-shadow:0 0 8px #00ff88;box-shadow:0 0 15px rgba(0,255,136,0.15);backdrop-filter:blur(8px);">← Control Center</a>
+<div class="wrap">
+
+<header>
+  <h1>⚡ MOLIYA</h1>
+  <p>DAROMAD & XARAJAT TRACKER</p>
+  <a href="index.html" class="home-link">🏠 Umumiy panel</a>
+</header>
+
+<!-- Summary -->
+<div class="summary">
+  <div class="card card-in">
+    <div class="card-label">DAROMAD</div>
+    <div class="card-val" id="totalIn">0</div>
+  </div>
+  <div class="card card-out">
+    <div class="card-label">XARAJAT</div>
+    <div class="card-val" id="totalOut">0</div>
+  </div>
+  <div class="card card-net">
+    <div class="card-label">QOLDIQ</div>
+    <div class="card-val" id="totalNet">0</div>
+  </div>
+</div>
+
+<!-- Period -->
+<div class="period-bar">
+  <button class="period-btn active" data-period="day">KUN</button>
+  <button class="period-btn" data-period="week">HAFTA</button>
+  <button class="period-btn" data-period="month">OY</button>
+</div>
+
+<!-- Navigation -->
+<div class="nav-bar" id="navBar">
+  <button class="nav-btn" onclick="navGo(-1)">◀</button>
+  <span class="nav-label" id="navLabel">Bugun</span>
+  <button class="nav-btn" onclick="navGo(1)">▶</button>
+</div>
+
+<!-- Chart -->
+<div class="chart-wrap">
+  <div class="chart-title">[ GRAFIK ]</div>
+  <div class="chart-bars" id="chartBars"></div>
+  <div class="chart-labels" id="chartLabels"></div>
+</div>
+
+<!-- Add buttons -->
+<div class="add-row">
+  <button class="add-btn-main add-btn-in" id="btnAddIn">+ DAROMAD</button>
+  <button class="add-btn-main add-btn-out" id="btnAddOut">− XARAJAT</button>
+</div>
+
+<!-- Transactions -->
+<div class="section-title-tx" id="txTitle">[ BUGUNGI HARAKATLAR ]</div>
+<div id="txList"></div>
+
+</div><!-- wrap -->
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <h3 id="modalTitle">DAROMAD QO'SHISH</h3>
+    <div class="fg">
+      <label>Kategoriya</label>
+      <select id="inpCat"></select>
+    </div>
+    <div class="fg">
+      <label>Izoh (ixtiyoriy)</label>
+      <input type="text" id="inpNote" placeholder="Masalan: Yandex zakaz">
+    </div>
+    <div class="fg">
+      <label>Summa (so'm)</label>
+      <input type="number" id="inpAmount" placeholder="50000">
+    </div>
+    <div class="fg">
+      <label>Sana</label>
+      <input type="date" id="inpDate">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" id="btnCancel">BEKOR</button>
+      <button class="btn-save" id="btnSave">SAQLASH</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBRAXmQ98Akn4ZX4dJZ1RUPOQ5Zvl9lR6k",
+  authDomain: "moliyaviy-erkinlik.firebaseapp.com",
+  databaseURL: "https://moliyaviy-erkinlik-default-rtdb.firebaseio.com",
+  projectId: "moliyaviy-erkinlik",
+  storageBucket: "moliyaviy-erkinlik.firebasestorage.app",
+  messagingSenderId: "404181581489",
+  appId: "1:404181581489:web:2945fa8e654363e4952c90"
+};
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
+
+var IN_CATS  = ['Yandex Kuryer','Yandex Eats','Maosh','Bonus','Boshqa daromad'];
+var OUT_CATS = ['Taksi','Ovqat','Dori','Ijara (Tebo)','Ijara (uy)','Transport','Kiyim','Do\'stga qarz','Boshqa xarajat'];
+
+var txs = [];
+var currentPeriod = 'day';
+var addType = 'in';
+// These will be initialized after functions are defined
+var selectedDate, selectedWeek, selectedMonth;
+
+function save(tx){ db.ref('daromad').push(tx); }
+
+function fmt(n){
+  var abs = Math.abs(Number(n));
+  if(abs >= 1000000) return (abs/1000000).toFixed(1)+'M';
+  if(abs >= 1000) return (abs/1000).toFixed(0)+'K';
+  return abs.toString();
+}
+function fmtFull(n){ return Number(n).toLocaleString('ru-RU')+" so'm"; }
+
+function fmtDate(d){
+  var parts = d.split('-');
+  var m = ['Yan','Feb','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
+  return parseInt(parts[2])+' '+m[parseInt(parts[1])-1];
+}
+
+function todayStr(){
+  var d = new Date();
+  var y = d.getFullYear();
+  var mo = d.getMonth()+1; if(mo<10) mo='0'+mo;
+  var day = d.getDate(); if(day<10) day='0'+day;
+  return y+'-'+mo+'-'+day;
+}
+
+
+function dateToStr(d){
+  var y=d.getFullYear();
+  var m=d.getMonth()+1;
+  var day=d.getDate();
+  return y+'-'+(m<10?'0':'')+m+'-'+(day<10?'0':'')+day;
+}
+
+function getWeekStart(date){
+  var d=new Date(date);
+  var day=d.getDay();
+  var diff=day===0?-6:1-day;
+  d.setDate(d.getDate()+diff);
+  return dateToStr(d);
+}
+
+function getWeekEnd(weekStart){
+  return shiftDate(weekStart,6);
+}
+
+function getMonthPrefix(date){
+  return date.getFullYear()+'-'+((date.getMonth()+1)<10?'0':'')+(date.getMonth()+1);
+}
+
+function addMonths(monthStr,amount){
+  var p=monthStr.split('-');
+  var d=new Date(parseInt(p[0]),parseInt(p[1])-1,1);
+  d.setMonth(d.getMonth()+amount);
+  return d.getFullYear()+'-'+((d.getMonth()+1)<10?'0':'')+(d.getMonth()+1);
+}
+
+function filterTxs(period){
+  return txs.filter(function(t){
+    if(!t.date) return false;
+
+    if(period==='day'){
+      return t.date===selectedDate;
+    }
+
+    if(period==='week'){
+      var weekEnd=getWeekEnd(selectedWeek);
+      return t.date>=selectedWeek && t.date<=weekEnd;
+    }
+
+    if(period==='month'){
+      return t.date.substring(0,7)===selectedMonth;
+    }
+
+    return false;
+  });
+}
+
+function updateSummary(){
+  var filtered = filterTxs(currentPeriod);
+  var totalIn  = filtered.filter(function(t){return t.type==='in';}).reduce(function(s,t){return s+Number(t.amount);},0);
+  var totalOut = filtered.filter(function(t){return t.type==='out';}).reduce(function(s,t){return s+Number(t.amount);},0);
+  var net = totalIn - totalOut;
+
+  document.getElementById('totalIn').textContent  = fmt(totalIn);
+  document.getElementById('totalOut').textContent = fmt(totalOut);
+  var netEl = document.getElementById('totalNet');
+  netEl.textContent = (net>=0?'+':'')+fmt(net);
+  netEl.style.color = net>=0 ? '#00ff88' : '#ff3366';
+  netEl.style.textShadow = net>=0 ? '0 0 8px #00ff88' : '0 0 8px #ff3366';
+}
+
+function updateChart(){
+  var bars   = document.getElementById('chartBars');
+  var labels = document.getElementById('chartLabels');
+  bars.innerHTML = ''; labels.innerHTML = '';
+
+  var days = [];
+  var now  = new Date();
+
+  if(currentPeriod==='day'){
+    // Soatlar bo'yicha: 6, 9, 12, 15, 18, 21
+    var hours = [6,9,12,15,18,21];
+    hours.forEach(function(h){
+      var inAmt=0, outAmt=0;
+      txs.forEach(function(t){
+        if(t.date===todayStr()){
+          var th = t.time ? parseInt(t.time.split(':')[0]) : 12;
+          if(th>=h && th<h+3){
+            if(t.type==='in') inAmt+=Number(t.amount);
+            else outAmt+=Number(t.amount);
+          }
+        }
+      });
+      days.push({label:h+':00', in:inAmt, out:outAmt});
+    });
+  } else if(currentPeriod==='week'){
+    for(var i=6;i>=0;i--){
+      var d = new Date(now); d.setDate(d.getDate()-i);
+      var dy = d.getFullYear(); var dmo = d.getMonth()+1; var dd = d.getDate();
+      var ds = dy+'-'+(dmo<10?'0':'')+dmo+'-'+(dd<10?'0':'')+dd;
+      var inAmt=0,outAmt=0;
+      txs.forEach(function(t){ if(t.date===ds){ if(t.type==='in') inAmt+=Number(t.amount); else outAmt+=Number(t.amount); }});
+      var nm=['Yak','Du','Se','Cho','Pa','Ju','Sha'];
+      days.push({label:nm[d.getDay()], in:inAmt, out:outAmt});
+    }
+  } else {
+    // Show days of selected month
+    var mparts = selectedMonth.split('-');
+    var my = parseInt(mparts[0]); var mm2 = parseInt(mparts[1]);
+    var daysInMonth = new Date(my, mm2, 0).getDate();
+    var weeks = [0,0,0,0]; var weeksOut = [0,0,0,0];
+    txs.forEach(function(t){
+      if(t.date && t.date.substring(0,7)===selectedMonth){
+        var day = parseInt(t.date.split('-')[2]);
+        var wi = Math.min(Math.floor((day-1)/7), 3);
+        if(t.type==='in') weeks[wi]+=Number(t.amount);
+        else weeksOut[wi]+=Number(t.amount);
+      }
+    });
+    for(var i=0;i<4;i++){
+      days.push({label:(i+1)+'.hafta', in:weeks[i], out:weeksOut[i]});
+    }
+  }
+
+  var maxVal = Math.max.apply(null, days.map(function(d){return Math.max(d.in,d.out,1);}));
+
+  days.forEach(function(d){
+    var bg = document.createElement('div');
+    bg.className = 'bar-group';
+
+    var b1=document.createElement('div'); b1.className='bar bar-in';
+    b1.style.height = Math.max((d.in/maxVal)*75,d.in>0?3:0)+'px';
+    b1.title = fmtFull(d.in);
+
+    var b2=document.createElement('div'); b2.className='bar bar-out';
+    b2.style.height = Math.max((d.out/maxVal)*75,d.out>0?3:0)+'px';
+    b2.title = fmtFull(d.out);
+
+    bg.appendChild(b1); bg.appendChild(b2);
+    bars.appendChild(bg);
+
+    var lbl=document.createElement('div'); lbl.className='chart-label';
+    lbl.textContent=d.label;
+    labels.appendChild(lbl);
+  });
+}
+
+function updateTxList(){
+  var titles = {day:'[ BUGUNGI HARAKATLAR ]', week:'[ HAFTALIK HARAKATLAR ]', month:'[ OYLIK HARAKATLAR ]'};
+  document.getElementById('txTitle').textContent = titles[currentPeriod];
+
+  var filtered = filterTxs(currentPeriod);
+  filtered.sort(function(a,b){ return new Date(b.date+' '+(b.time||'00:00')) - new Date(a.date+' '+(a.time||'00:00')); });
+
+  var list = document.getElementById('txList');
+  list.innerHTML = '';
+
+  if(filtered.length===0){
+    list.innerHTML='<div class="empty-state">[ HALI HECH NARSA YO\'Q ]<br><br>Daromad yoki xarajat qo\'shing</div>';
+    return;
+  }
+
+  filtered.forEach(function(t){
+    var isIn = t.type==='in';
+    var color = isIn ? '#00ff88' : '#ff3366';
+    var item = document.createElement('div');
+    item.className = 'tx-item';
+    item.style.setProperty('--tc', color);
+
+    item.innerHTML =
+      '<div class="tx-left">'+
+        '<div class="tx-cat">'+t.cat+'</div>'+
+        '<div class="tx-name">'+(t.note||t.cat)+'</div>'+
+        '<div class="tx-date">'+fmtDate(t.date)+(t.time?' '+t.time:'')+'</div>'+
+      '</div>'+
+      '<div class="tx-right">'+
+        '<div class="tx-amount" style="color:'+color+';text-shadow:0 0 8px '+color+'">'+
+          (isIn?'+':'-')+fmtFull(t.amount)+
+        '</div>'+
+        '<button class="tx-del" data-id="'+(t._fbKey||t.id)+'">DEL</button>'+
+      '</div>';
+
+    list.appendChild(item);
+  });
+}
+
+function render(){
+  updateSummary();
+  updateChart();
+  updateTxList();
+  updateNavLabel();
+}
+
+// Period buttons
+document.querySelector('.period-bar').addEventListener('click', function(e){
+  var btn = e.target.closest('.period-btn');
+  if(!btn) return;
+  document.querySelectorAll('.period-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  currentPeriod = btn.getAttribute('data-period');
+  // Reset to current period
+  selectedDate = todayStr();
+  selectedWeek = getWeekStart(new Date());
+  selectedMonth = getMonthPrefix(new Date());
+  render();
+});
+
+// Delete
+document.getElementById('txList').addEventListener('click', function(e){
+  var btn = e.target.closest('.tx-del');
+  if(!btn) return;
+  var fbKey = btn.getAttribute('data-id');
+  db.ref('daromad/' + fbKey).remove();
+  showToast('🗑 O\'CHIRILDI');
+});
+
+// Add buttons
+document.getElementById('btnAddIn').addEventListener('click', function(){
+  addType = 'in';
+  openModal();
+});
+document.getElementById('btnAddOut').addEventListener('click', function(){
+  addType = 'out';
+  openModal();
+});
+
+function openModal(){
+  var isIn = addType==='in';
+  document.getElementById('modalTitle').textContent = isIn ? '💚 DAROMAD QO\'SHISH' : '🔴 XARAJAT QO\'SHISH';
+  document.getElementById('modalTitle').style.color = isIn ? '#00ff88' : '#ff3366';
+  document.getElementById('modal').style.setProperty('--modal-color', isIn?'#00ff88':'#ff3366');
+  document.getElementById('modal').style.borderColor = isIn?'rgba(0,255,136,0.3)':'rgba(255,51,102,0.3)';
+  document.getElementById('btnSave').style.color = isIn?'#00ff88':'#ff3366';
+  document.getElementById('btnSave').style.borderColor = isIn?'rgba(0,255,136,0.5)':'rgba(255,51,102,0.5)';
+  document.getElementById('btnSave').style.background = isIn?'rgba(0,255,136,0.1)':'rgba(255,51,102,0.1)';
+
+  var cats = isIn ? IN_CATS : OUT_CATS;
+  var sel = document.getElementById('inpCat');
+  sel.innerHTML = '';
+  cats.forEach(function(c){
+    var o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o);
+  });
+
+  document.getElementById('inpNote').value='';
+  document.getElementById('inpAmount').value='';
+  document.getElementById('inpDate').value=todayStr();
+  document.getElementById('modalOverlay').className='modal-overlay open';
+}
+
+document.getElementById('btnCancel').addEventListener('click', function(){
+  document.getElementById('modalOverlay').className='modal-overlay';
+});
+
+document.getElementById('modalOverlay').addEventListener('click', function(e){
+  if(e.target===this) this.className='modal-overlay';
+});
+
+document.getElementById('btnSave').addEventListener('click', function(){
+  var cat    = document.getElementById('inpCat').value;
+  var note   = document.getElementById('inpNote').value.trim();
+  var amount = parseInt(document.getElementById('inpAmount').value,10);
+  var date   = document.getElementById('inpDate').value;
+  if(!amount||!date){ showToast('⚠ SUMMANI KIRITING!'); return; }
+
+  var now = new Date();
+  var hh = now.getHours()<10?'0'+now.getHours():now.getHours();
+  var mm = now.getMinutes()<10?'0'+now.getMinutes():now.getMinutes();
+
+  save({
+    type: addType,
+    cat: cat,
+    note: note||cat,
+    amount: amount,
+    date: date,
+    time: hh+':'+mm
+  });
+  document.getElementById('modalOverlay').className='modal-overlay';
+  showToast(addType==='in'?'✅ DAROMAD QO\'SHILDI':'✅ XARAJAT QO\'SHILDI');
+});
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show';
+  setTimeout(function(){ t.className='toast'; },2000);
+}
+
+
+// Nav label update
+function updateNavLabel(){
+  var label = document.getElementById('navLabel');
+  if(!label) return;
+  var months = ['Yan','Feb','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
+  if(currentPeriod==='day'){
+    var today = todayStr();
+    if(selectedDate===today){
+      label.textContent = 'BUGUN';
+    } else {
+      var p = selectedDate.split('-');
+      label.textContent = parseInt(p[2])+' '+months[parseInt(p[1])-1];
+    }
+  } else if(currentPeriod==='week'){
+    var wend = getWeekEnd(selectedWeek);
+    var p1 = selectedWeek.split('-');
+    var p2 = wend.split('-');
+    label.textContent = parseInt(p1[2])+' '+months[parseInt(p1[1])-1]+' — '+parseInt(p2[2])+' '+months[parseInt(p2[1])-1];
+  } else {
+    var p = selectedMonth.split('-');
+    label.textContent = months[parseInt(p[1])-1]+' '+p[0];
+  }
+}
+
+// Nav prev/next
+function shiftDate(dateStr, days){
+  // Parse date parts directly to avoid timezone issues
+  var p = dateStr.split('-');
+  var d = new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]));
+  d.setDate(d.getDate() + days);
+  return dateToStr(d);
+}
+
+function navGo(dir){
+  if(currentPeriod==='day'){
+    selectedDate = shiftDate(selectedDate, dir);
+  } else if(currentPeriod==='week'){
+    selectedWeek = shiftDate(selectedWeek, dir*7);
+  } else {
+    selectedMonth = addMonths(selectedMonth, dir);
+  }
+  render();
+}
+
+// Initialize selected periods
+selectedDate = todayStr();
+selectedWeek = getWeekStart(new Date());
+selectedMonth = getMonthPrefix(new Date());
+
+// Firebase listener - after all functions defined
+db.ref('daromad').on('value', function(snapshot){
+  txs = [];
+  var val = snapshot.val();
+  if(val){
+    Object.keys(val).forEach(function(k){
+      txs.push(Object.assign({}, val[k], {_fbKey: k}));
+    });
+  }
+  render();
+});
+</script>
+</body>
+</html>
